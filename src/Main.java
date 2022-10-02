@@ -8,46 +8,9 @@ public class Main implements ItemList, DiscoveryList {
 
         //This is where the ItemsList was
         //This is where the ScenarioList likely would have been
-
-        Random rand = new Random();
-
-        Item Card1 = null;
-        int n = rand.nextInt(5);
-        switch (n) {
-            case 0 -> Card1 = item0;//nothing
-            case 1 -> Card1 = item1;//a stick
-            case 2 -> Card1 = item2;//a few stones
-            case 3 -> Card1 = item3;//a heavy rock
-            case 4 -> Card1 = item4;//some metal scraps
-            default -> throw new IllegalStateException("Unexpected value: " + n);
-            /*if (n == 0){Card1 = item0;} //nothing
-            if (n == 1){Card1 = item1;} //a stick
-            if (n == 2){Card1 = item2;} //a few stones
-            if (n == 3){Card1 = item3;} //a heavy rock
-            if (n == 4){Card1 = item4;} //some metal scraps*/ //Old if-else structure
-        }
-
-        Item Card2 = null;
-        n = rand.nextInt(5);
-        switch (n) {
-            case 0 -> Card2 = item0;//nothing
-            case 1 -> Card2 = item1;//a stick
-            case 2 -> Card2 = item2;//a few stones
-            case 3 -> Card2 = item3;//a heavy rock
-            case 4 -> Card2 = item4;//some metal scraps
-            default -> throw new IllegalStateException("Unexpected value: " + n);
-        }
-
-        Item Card3 = null;
-        n = rand.nextInt(5);
-        switch (n) {
-            case 0 -> Card3 = item0;//nothing
-            case 1 -> Card3 = item1;//a stick
-            case 2 -> Card3 = item2;//a few stones
-            case 3 -> Card3 = item3;//a heavy rock
-            case 4 -> Card3 = item4;//some metal scraps
-            default -> throw new IllegalStateException("Unexpected value: " + n);
-        }
+        Item Card1 = GetCard();
+        Item Card2 = GetCard();
+        Item Card3 = GetCard();
 
         n = rand.nextInt(21, 101);
         int Nourishment = n;  //Food and Hydration out of 100. If it reaches 0, the player dies.

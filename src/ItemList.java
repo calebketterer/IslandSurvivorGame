@@ -1,3 +1,4 @@
+public const ItemCount = 6;
 public interface ItemList {
 
     Item item0 = new Item.ItemBuilder("nothing", 0)
