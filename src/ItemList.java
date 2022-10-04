@@ -1,5 +1,5 @@
-public const ItemCount = 6;
 public interface ItemList {
+    int ItemCount = 6;
 
     Item item0 = new Item.ItemBuilder("nothing", 0)
             .Ability("Not a thing.")
