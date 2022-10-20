@@ -8,11 +8,46 @@ public class Main implements ItemList, DiscoveryList {
 
         //This is where the ItemsList was
         //This is where the ScenarioList likely would have been
-        Item Card1 = GetCard();
-        Item Card2 = GetCard();
-        Item Card3 = GetCard();
 
-        n = rand.nextInt(21, 101);
+        Item Card1 = ItemGen.GenRandomItem();
+        Item Card2 = ItemGen.GenRandomItem();
+        Item Card3 = ItemGen.GenRandomItem();
+
+        /*Item Card1 = null;
+        int n = rand.nextInt(5);
+        switch (n) {
+            case 0 -> Card1 = item0;//nothing
+            case 1 -> Card1 = item1;//a stick
+            case 2 -> Card1 = item2;//a few stones
+            case 3 -> Card1 = item3;//a heavy rock
+            case 4 -> Card1 = item4;//some metal scraps
+            default -> throw new IllegalStateException("Unexpected value: " + n);
+
+        }
+
+        Item Card2 = null;
+        n = rand.nextInt(5);
+        switch (n) {
+            case 0 -> Card2 = item0;//nothing
+            case 1 -> Card2 = item1;//a stick
+            case 2 -> Card2 = item2;//a few stones
+            case 3 -> Card2 = item3;//a heavy rock
+            case 4 -> Card2 = item4;//some metal scraps
+            default -> throw new IllegalStateException("Unexpected value: " + n);
+        }
+
+        Item Card3 = null;
+        n = rand.nextInt(5);
+        switch (n) {
+            case 0 -> Card3 = item0;//nothing
+            case 1 -> Card3 = item1;//a stick
+            case 2 -> Card3 = item2;//a few stones
+            case 3 -> Card3 = item3;//a heavy rock
+            case 4 -> Card3 = item4;//some metal scraps
+            default -> throw new IllegalStateException("Unexpected value: " + n);
+        }*/
+        Random rand = new Random();
+        int n = rand.nextInt(21, 101);
         int Nourishment = n;  //Food and Hydration out of 100. If it reaches 0, the player dies.
         int DistanceFromCoast = 0; //Distance from coast. Negatives will be in ocean.
         /*
@@ -54,55 +89,11 @@ public class Main implements ItemList, DiscoveryList {
                                     """);
                     break;
                 }
-                case "Tips": {
-                    n = rand.nextInt(5);
-                    switch (n) {
-                        case 0 : {
-                            System.out.print("""
-                                    
-                                    Your wealth can be spent on food to keep your character from going hungry
-                                    as long as you can find the local village with funds to spare.
-                                    """);
-                            break;
-                        } // Spending wealth
-                        case 1 : {
-                            System.out.print("""
-                                    
-                                    This game's values are almost entirely RNG based,
-                                    so it's best to play it safe if you're worried about dying!
-                                    """);
-                            break;
-                        } // Play it safe!
-                        case 2 : {
-                            System.out.print("""
-                                    
-                                    Due to the shipwrecks along the shore,
-                                    you are more likely to find valuable items washed up at the coast!
-                                    """);
-                            break;
-                        } // More likely for valuables
-                        case 3 : {
-                            System.out.print("""
-                                    
-                                    You are less likely to find valuables close to the village.
-                                    """);
-                            break;
-                        } // Less likely for valuables
-                        case 4 : {
-                            System.out.print("""
-                                    
-                                    You are more likely to find food closer to the inland than at the coast!
-                                    """);
-                            break;
-                        } // Food rarity
-                        default : {
-                            System.out.print("""
-                                    
-                                    Well this wasn't supposed to happen...
-                                    """);
-                            break;
-                        } // Catch
-                    } // Tip list
+                case "Reroll": {
+                    Card1 = GetItem.GenRandomItem();
+                    Card2 = GetItem.GenRandomItem();
+                    Card3 = GetItem.GenRandomItem();
+                    System.out.print("Your items have officially been rerolled.");
                     break;
                 }
                 case "Stats": {
@@ -114,9 +105,55 @@ public class Main implements ItemList, DiscoveryList {
                     );
                     break;
                 } //Add get fucked statement if ItemWorth <= 5 coin.
+                case "Tips": {
+                    n = rand.nextInt(5);
+                    switch (n) {
+                        case 0 -> {
+                            System.out.print("""
+
+                                    Your wealth can be spent on food to keep your character from going hungry
+                                    as long as you can find the local village with funds to spare.
+                                    """);
+                        } // Spending wealth
+                        case 1 -> {
+                            System.out.print("""
+
+                                    This game's values are almost entirely RNG based,
+                                    so it's best to play it safe if you're worried about dying!
+                                    """);
+                        } // Play it safe!
+                        case 2 -> {
+                            System.out.print("""
+
+                                    Due to the shipwrecks along the shore,
+                                    you are more likely to find valuable items washed up at the coast!
+                                    """);
+                        } // More likely for valuables
+                        case 3 -> {
+                            System.out.print("""
+
+                                    You are less likely to find valuables close to the village.
+                                    """);
+                        } // Less likely for valuables
+                        case 4 -> {
+                            System.out.print("""
+
+                                    You are more likely to find food closer to the inland than at the coast!
+                                    """);
+                        } // Food rarity
+                        default -> {
+                            System.out.print("""
+
+                                    Well this wasn't supposed to happen...
+                                    """);
+                        } // Catch
+                    } // Tip list
+                    break;
+                }
+
             }
         } //Ready?(Yes/No/Controls/Objectives/Tips)
-        while(!Objects.equals(s, "Yes")); // Consent prompt*/
+        while(!Objects.equals(s, "Yes"));*/ // Consent prompt
         /*System.out.println("""
                 
                 Hello survivor!
@@ -150,7 +187,7 @@ public class Main implements ItemList, DiscoveryList {
 */ // Sarcastic intro prompt  Make it pop up 20% of the time ?
         do {
             switch (DistanceFromCoast) {
-                case 0: {
+                case 0 -> {
                     System.out.println("""
                                             
                             You now have to choose if you'll wander along the coast
@@ -235,7 +272,7 @@ public class Main implements ItemList, DiscoveryList {
                     }
                     break;
                 } // Coast
-                case 1: {
+                case 1 -> {
                     System.out.println("""
                                             
                             You now have have to choose if you'll return to the coast,
@@ -355,7 +392,7 @@ public class Main implements ItemList, DiscoveryList {
                     }
                     break;
                 } // Beach
-                case 2: {
+                case 2 -> {
                     System.out.println("""
                                             
                             You now have have to choose if you'll return to the beach,
@@ -485,7 +522,7 @@ public class Main implements ItemList, DiscoveryList {
                     }
                     break;
                 } // Inland
-                case 3: {
+                case 3 -> {
                     System.out.println("""
                                             
                             You now have have to choose if you'll return to the inland,
@@ -586,7 +623,7 @@ public class Main implements ItemList, DiscoveryList {
                         }
                     }
                     if (Nourishment <= 0 && s.equals("Village")) {
-                        System.out.println("\nYou were so close, but a small miscalculation resulted in the worst. \nYou starved to death. Or died from dehydration. Either way, you didn't survive.\n"+
+                        System.out.println("\nYou were so close, but a small miscalculation resulted in the worst. \nYou starved to death. Or died from dehydration. Either way, you didn't survive.\n" +
                                 "\nYour final stats:" +
                                 "\nLifetime: " + Lifetime + " turns." +
                                 "\nWorth: " + TotalWorth + " coin." +
@@ -594,7 +631,7 @@ public class Main implements ItemList, DiscoveryList {
                         System.exit(0);
                     }
                     if (Nourishment <= 0) {
-                        System.out.println("\nWell.. You starved to death. Or died from dehydration. Either way, you didn't survive.\n"+
+                        System.out.println("\nWell.. You starved to death. Or died from dehydration. Either way, you didn't survive.\n" +
                                 "\nYour final stats:" +
                                 "\nLifetime: " + Lifetime + " turns." +
                                 "\nWorth: " + TotalWorth + " coin." +
@@ -604,14 +641,13 @@ public class Main implements ItemList, DiscoveryList {
 
                     break;
                 } // Forest
-                case 4: {
+                case 4 -> {
                     System.out.println("\nCongrats, you've found the local village!\nYour final stats:" +
                             "\nLifetime: " + Lifetime + " turns." +
                             "\nWorth: " + TotalWorth + " coin." +
                             "\nNourishment: " + Nourishment + " percent.");
                     System.exit(0);
                 } // Village
-
             }
             if (Objects.equals(s, "Coast") || Objects.equals(s, "Beach") || Objects.equals(s, "Inland") || Objects.equals(s, "Forest") || Objects.equals(s, "Village")){ Lifetime ++;}
         }//switch cases
