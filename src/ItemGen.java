@@ -4,7 +4,6 @@ public class ItemGen {
     public static Item GenRandomItem() {
         Random rand = new Random();
         int n = rand.nextInt(ItemList.ItemCount);
-
         switch (n) {
             case 0 -> {
                 return ItemList.item0;
