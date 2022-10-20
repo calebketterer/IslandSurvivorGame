@@ -3,21 +3,42 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Main implements ItemList, DiscoveryList {
-    public static int Nourishment, DistanceFromCoast, Lifetime, TotalWorth, n;
+    public static int Nourishment = 25, DistanceFromCoast = 0, Lifetime = 0, PocketChange = 0, Experience = 0, TotalWorth, n;
     public static String s;
     public static Scanner sc = new Scanner(System.in);
     public static Random rand = new Random();
     public static Item Card1, Card2, Card3;
 
+    //GameRules
+    public static boolean Inventory = false;
+    public static boolean Randomize = false;
+
     public static void genInventory(){
+        Inventory = true;
         Card1 = ItemGen.GenRandomItem();
         Card2 = ItemGen.GenRandomItem();
         Card3 = ItemGen.GenRandomItem();
     }
     public static void initializePlayerStats(){
+        if(Randomize){randomizePlayerStats();}
+        else {
+            Nourishment = 100;  //If it reaches 0, the player dies.
+            PocketChange = 20;
+            DistanceFromCoast = 0; //Temporary player location tool. Negatives will be in ocean.
+            Lifetime = 0; // How many turns you survived
+            if (Inventory) {
+                TotalWorth = Card1.getWorth() + Card2.getWorth() + Card3.getWorth() + PocketChange;
+            } else {
+                TotalWorth = PocketChange;
+            }
+        }
+        if(Inventory){genInventory();}
+    }
+    public static void randomizePlayerStats(){
         Random rand = new Random();
         n = rand.nextInt(21, 101);
         Nourishment = n;  //If it reaches 0, the player dies.
+        PocketChange = rand.nextInt(10, 25);
         DistanceFromCoast = 0; //Temporary player location tool. Negatives will be in ocean.
         /*
          Coast has higher chance of treasure, no chance of food.
@@ -27,7 +48,8 @@ public class Main implements ItemList, DiscoveryList {
         */
         Lifetime = 0; // How many turns you survived
         int Experience = 0; // Experienced gained by scenario completion
-        TotalWorth = Card1.getWorth() + Card2.getWorth() + Card3.getWorth();
+        if (Inventory) {TotalWorth=Card1.getWorth() + Card2.getWorth() + Card3.getWorth()+PocketChange;}
+        else {TotalWorth=PocketChange;}
     }
 
     public static void promptControls(){
@@ -42,6 +64,7 @@ public class Main implements ItemList, DiscoveryList {
                             
                             Alternatively, you can simply input
                             the first lowercase letter of a word.
+                            (This only works after the game starts.)
                                                                 
                             During the game, you will always have access to (Stats)
                             and will not be penalized for mis-inputs.
@@ -94,16 +117,30 @@ public class Main implements ItemList, DiscoveryList {
             switch (s) {
                 case "Controls" -> promptControls();
                 case "Objective" -> promptObjective();
-                case "Reroll" -> {
-                    initializePlayerStats();
-                    genInventory();
-                    System.out.print("All your stats have officially been rerolled.");
-                    promptStats();
+                case "ReRoll" -> {
+                    randomizePlayerStats();
+                    if (Inventory) {
+                        genInventory();
+                        System.out.print("\nAll your stats have officially been rerolled.");
+                        promptStats();
+                    }
+                    else {
+                        System.out.print("\nAll your stats have officially been rerolled.");
+                        promptStats();
+                        System.out.print("This is a reminder that you still have no inventory.\n");
+                    }
+
+
                 }
-                case "RerollInv" -> {
-                    genInventory();
-                    System.out.print("Your items have officially been rerolled.");
-                    System.out.println("They are now " + Card1.getItemName() + ", " + Card2.getItemName() + ", and " + Card3.getItemName() + ".");
+                case "ReRollInv" -> {
+                    if (Inventory) {
+                        genInventory();
+                        System.out.print("\nYour items have officially been rerolled.");
+                        System.out.println("They are now " + Card1.getItemName() + ", " + Card2.getItemName() + ", and " + Card3.getItemName() + ".");
+                    }
+                    else {
+                        System.out.print("\nYou have no inventory.\n");
+                    }
                 }
                 case "Stats" -> promptStats(); //Add get fucked statement if ItemWorth <= 5 coin.
                 case "Tips" -> promptTips();
@@ -117,41 +154,40 @@ public class Main implements ItemList, DiscoveryList {
                 Hello survivor!
 
                 You are washed up onto the banks of a shore you’ve never seen before.
-                From what you can tell, no one else has found it either.
-                Immediately surrounding you are\040""" + Card1.getItemName()+ ", " + Card2.getItemName() + ", and " + Card3.getItemName() + ". " + """
-                
-                These seem to be the only remains from the shipwreck.
-                
-                You are the sole survivor.""");
+                From what you can tell, no one else has found it either.""");
+        if (Inventory) {
+            System.out.println("Immediately surrounding you are\040" +
+                    Card1.getItemName() + ", " + Card2.getItemName() + ", and " + Card3.getItemName() + ". " +
+                    "\nThese seem to be the only remains from the shipwreck.");
+        }
+        System.out.println("You are the sole survivor.");
     }
     public static void promptSarcasticPostIntro(){
-        do {System.out.println("\nWill you get up or just lay there and die? (Live/Die)");
+
+        do{
+            System.out.println("\nWill you get up or just lay there and die? (Live/Die)");
             s = sc.nextLine();
-            if (Objects.equals(s, "Die")){System.out.println("\nWell... Congrats. You never got up and you died. \n\nGame over.");
-                System.exit(0);}
-            if (Objects.equals(s, "Controls")){System.out.print("""
-                Input the following to display the following:
-                
-                Stats       :   Displays your character stats.
-                Controls    :   Pulls up this menu again.
-                """);}
-            if (Objects.equals(s, "Stats")){System.out.print("\nYou're currently carrying " + Card1.getItemName() + ", " + Card2.getItemName() + ", and " + Card3.getItemName() + "." +
-                    "\nYou're currently worth " + TotalWorth + " coin." +
-                    "\nYour Nourishment is at " + Nourishment + " percent." +
-                    "\nYou're " + DistanceFromCoast + " quarter-kilometers from the coast.\n"
-            );
+            switch (s) {
+                case "Die" -> {System.out.println("\nWell... Congrats, you died... \n\nGame over."); System.exit(0);}
+                case "Controls" -> promptControls();
+                case "Stats" -> promptStats();
             }
-        }//(Live/Die)
+        } //Ready?(Yes/No/Controls/Objectives/Tips)
         while(!Objects.equals(s, "Live"));
-        System.out.println("\nWell... Congrats, you didn't die... \n\nYet.");
+        //(Live/Die)
+        System.out.println("\nWell... Alright. If you insist... \n");
         // Sarcastic intro prompt  Make it pop up 20% of the time ?
     }
     public static void promptStats(){
-        System.out.print("\nYou're currently carrying " + Card1.getItemName() + ", " + Card2.getItemName() + ", and " + Card3.getItemName() + "." +
-                "\nYou're on turn " + Lifetime + "." +
-                "\nYou're currently worth " + TotalWorth + " coin." +
-                "\nYour Nourishment is at " + Nourishment + " percent." +
-                "\nYou're " + DistanceFromCoast + " quarter-kilometers from the coast.\n"
+        if (Inventory){
+            System.out.print("\nYou're carrying " + Card1.getItemName() + ", " + Card2.getItemName() + ", and " + Card3.getItemName() + "."+
+                    "\nYour current worth is " + TotalWorth + " coin. " + PocketChange + " of that is pocket change. ");
+        }
+        else {System.out.print("\nYou got " + PocketChange + " coin in your pockets.");}
+        if (Lifetime!=0){System.out.print("\nYou're on turn " + Lifetime + ".");}
+        System.out.print(
+                "\nYour Nourishment remains at " + Nourishment + " percent." +
+                "\n"
         );
     }
     public static void prompt0(){
@@ -214,7 +250,11 @@ public class Main implements ItemList, DiscoveryList {
         }
     }
     public static boolean validInput(){
-        return Objects.equals(s, "Coast") || Objects.equals(s, "Beach") || Objects.equals(s, "Inland") || Objects.equals(s, "Forest") || Objects.equals(s, "Village");
+        return Objects.equals(s, "Coast") || Objects.equals(s, "c")||
+                Objects.equals(s, "Beach") || Objects.equals(s, "b")||
+                Objects.equals(s, "Inland") || Objects.equals(s, "i")||
+                Objects.equals(s, "Forest") || Objects.equals(s, "f")||
+                Objects.equals(s, "Village")|| Objects.equals(s, "v");
     }
 
     public static void selectCoast(){
@@ -346,9 +386,9 @@ public class Main implements ItemList, DiscoveryList {
                     prompt0();
                     s = sc.nextLine();
                     switch (s) {
-                        case "Stats" -> promptStats();
-                        case "Coast" -> selectCoast();
-                        case "Beach" -> selectBeach();
+                        case "Stats", "s" -> promptStats();
+                        case "Coast", "c" -> selectCoast();
+                        case "Beach", "b" -> selectBeach();
                         default -> {
                             if (!s.equals("Exit")) {
                                 System.out.println("Invalid input: " + s);
@@ -361,10 +401,10 @@ public class Main implements ItemList, DiscoveryList {
                     prompt1();
                     s = sc.nextLine();
                     switch (s) {
-                        case "Stats" -> promptStats();
-                        case "Coast" -> selectCoast();
-                        case "Beach" -> selectBeach();
-                        case "Inland" -> selectInland();
+                        case "Stats", "s" -> promptStats();
+                        case "Coast", "c" -> selectCoast();
+                        case "Beach", "b" -> selectBeach();
+                        case "Inland", "i" -> selectInland();
                         default -> {
                             if (!s.equals("Exit")) {
                                 System.out.println("Invalid input: " + s);
@@ -377,10 +417,10 @@ public class Main implements ItemList, DiscoveryList {
                     prompt2();
                     s = sc.nextLine();
                     switch (s) {
-                        case "Stats" -> promptStats();
-                        case "Beach" -> selectBeach();
-                        case "Inland" -> selectInland();
-                        case "Forest" -> selectForest();
+                        case "Stats", "s" -> promptStats();
+                        case "Beach", "b" -> selectBeach();
+                        case "Inland", "i" -> selectInland();
+                        case "Forest", "f" -> selectForest();
                         default -> {
                             if (!s.equals("Exit")) {
                                 System.out.println("Invalid input: " + s);
@@ -393,10 +433,10 @@ public class Main implements ItemList, DiscoveryList {
                     prompt3();
                     s = sc.nextLine();
                     switch (s) {
-                        case "Stats" -> promptStats();
-                        case "Inland" -> selectInland();
-                        case "Forest" -> selectForest();
-                        case "Village" -> selectVillage();
+                        case "Stats", "s" -> promptStats();
+                        case "Inland", "i" -> selectInland();
+                        case "Forest", "f" -> selectForest();
+                        case "Village", "v" -> selectVillage();
                         default -> {
                             if (!s.equals("Exit")) {
                                 System.out.println("Invalid input: " + s);
@@ -417,9 +457,10 @@ public class Main implements ItemList, DiscoveryList {
     }
 
     public static void main(String[] args) {
-        genInventory();
         initializePlayerStats();
         promptConsent();
+        promptSarcasticPostIntro();
+        promptIntro();
         doTheThing();
 
         System.out.println("\nThe game has been exited.");

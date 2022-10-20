@@ -22,7 +22,7 @@ public interface DiscoveryList {
     Discovery discovery3 = new Discovery.DiscoveryBuilder("Wild Berries", 5)
             .FlavorText("A little less hungry, I hope.")
             .Narrative("After wandering amongst the brush, you find some wild berries to eat.")
-            .Nourishment(20)
+            .Nourishment(10)
             .Rarity(15)
             .build();
 
